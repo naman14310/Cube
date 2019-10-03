@@ -1,0 +1,186 @@
+<html>
+
+<head>
+    <style>
+        
+    html, body{
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    overflow: hidden;
+    display: block;
+
+    </style>
+</head>
+<body>
+    
+<canvas id="myCanvas" width = "2000" height = "2000" style = "background-color:Black">
+</canvas>
+
+
+<script>
+
+var size = 200;
+var rotating_angle = Math.PI;
+var centre1_x = 280 , centre1_y = 320;
+var x1 = centre1_x-size*0.5, y1 = centre1_y+size*0.5;
+var x2 = centre1_x-size*0.5 , y2 = centre1_y-size*0.5;
+var x3 = centre1_x+size*0.5, y3 = centre1_y+size*0.5;
+var x4 = centre1_x+size*0.5, y4 = centre1_y-size*0.5;
+
+var centre2_x = 320 , centre2_y = 360;
+var a1 = centre2_x-size*0.5, b1 = centre2_y+size*0.5;
+var a2 = centre2_x-size*0.5 , b2 = centre2_y-size*0.5;
+var a3 = centre2_x+size*0.5, b3 = centre2_y+size*0.5;
+var a4 = centre2_x+size*0.5, b4 = centre2_y-size*0.5;
+
+var rotating_point_x = Math.abs(centre1_x+centre2_x)*0.5;
+var rotating_point_y = Math.abs(centre1_y+centre2_y)*0.5;
+
+var canvas = document.getElementById("myCanvas");
+var ctx = canvas.getContext("2d");
+ctx.fillStyle = "#FFFFFF";
+drawSquare();
+rotate_square(rotating_angle);
+
+
+function line(context, p1,p2) {
+context.beginPath();
+context.moveTo(p1.x, p1.y);
+context.lineTo(p2.x, p2.y);
+context.closePath();
+ctx.strokeStyle = "#FFFFFF";
+context.stroke();
+}
+
+
+function drawSquare() {
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  line(ctx, {x:x1,y:y1},{x:x2,y:y2});
+  line(ctx, {x:x1,y:y1},{x:x3,y:y3});
+  line(ctx, {x:x4,y:y4},{x:x2,y:y2});
+  line(ctx, {x:x4,y:y4},{x:x3,y:y3});
+  line(ctx, {x:a1,y:b1},{x:a2,y:b2});
+  line(ctx, {x:a1,y:b1},{x:a3,y:b3});
+  line(ctx, {x:a4,y:b4},{x:a2,y:b2});
+  line(ctx, {x:a4,y:b4},{x:a3,y:b3});
+
+  line(ctx, {x:x1,y:y1},{x:a1,y:b1});
+  line(ctx, {x:x2,y:y2},{x:a2,y:b2});
+  line(ctx, {x:x3,y:y3},{x:a3,y:b3});
+  line(ctx, {x:a4,y:b4},{x:x4,y:y4});
+}
+
+function rotate_square(speed){
+
+var angle = speed / 180;
+var sinx = Math.sin(angle);
+var cosx = Math.cos(angle);
+ 
+x1 -= rotating_point_x;
+y1 -= rotating_point_y;
+x2 -= rotating_point_x;
+y2 -= rotating_point_y;
+x3 -= rotating_point_x;
+y3 -= rotating_point_y;
+x4 -= rotating_point_x;
+y4 -= rotating_point_y;
+
+x1 = x1*cosx - y1*sinx;
+y1 = x1*sinx + y1*cosx;
+x2 = x2*cosx - y2*sinx;
+y2 = x2*sinx + y2*cosx;
+x3 = x3*cosx - y3*sinx;
+y3 = x3*sinx + y3*cosx;
+x4 = x4*cosx - y4*sinx;
+y4 = x4*sinx + y4*cosx;
+
+x1 += rotating_point_x;
+y1 += rotating_point_y;
+x2 += rotating_point_x;
+y2 += rotating_point_y;
+x3 += rotating_point_x;
+y3 += rotating_point_y;
+x4 += rotating_point_x;
+y4 += rotating_point_y;
+
+a1 -= rotating_point_x;
+b1 -= rotating_point_y;
+a2 -= rotating_point_x;
+b2 -= rotating_point_y;
+a3 -= rotating_point_x;
+b3 -= rotating_point_y;
+a4 -= rotating_point_x;
+b4 -= rotating_point_y;
+
+a1 = a1*cosx - b1*sinx;
+b1 = a1*sinx + b1*cosx;
+a2 = a2*cosx - b2*sinx;
+b2 = a2*sinx + b2*cosx;
+a3 = a3*cosx - b3*sinx;
+b3 = a3*sinx + b3*cosx;
+a4 = a4*cosx - b4*sinx;
+b4 = a4*sinx + b4*cosx;
+
+a1 += rotating_point_x;
+b1 += rotating_point_y;
+a2 += rotating_point_x;
+b2 += rotating_point_y;
+a3 += rotating_point_x;
+b3 += rotating_point_y;
+a4 += rotating_point_x;
+b4 += rotating_point_y;
+
+drawSquare();
+}
+
+function forward() 
+{
+    rotate_square(rotating_angle);
+    drawSquare();
+}
+
+function reverse() 
+{
+    rotate_square(-1*rotating_angle);
+    drawSquare();
+}
+
+var interval = setInterval(reverse, 50);
+
+function startForward()
+{
+    interval = setInterval(forward, 25);
+}
+
+function startReverse()
+{
+    interval = setInterval(reverse, 25);
+}
+
+function stop()
+{
+    clearInterval(interval);
+}
+
+window.addEventListener('click', e => {
+    
+    stop();
+    var current_x = e.clientX;
+    if(current_x>300)
+    {
+        
+      startForward();
+
+    }
+    else 
+    {   
+       startReverse();
+    }
+});
+
+</script>
+
+</body>
+
+</html>
